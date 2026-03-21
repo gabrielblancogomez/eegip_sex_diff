@@ -1,0 +1,52 @@
+# Ignore Python virtual environments
+q1k_et_neurosubs_env/
+venv/
+.env/
+*.env/
+newenvname/
+
+# Ignore all text files
+*.txt
+
+# Ignore all CSV files
+*.csv
+
+# Ignore all TSV files
+*.tsv
+
+# Ignore all HTML files
+*.html
+
+# Ignore all INI files
+*.ini
+
+# Ignore all asc files
+*.asc
+
+# Ignore all png files
+*.png
+# Ignore all doc files
+*.docx
+
+# Ignore all jupyter notebooks that contain the word papermill 
+*papermill_executed.ipynb 
+
+# Ignore all edf files
+*.edf
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore outputs
+outputs/

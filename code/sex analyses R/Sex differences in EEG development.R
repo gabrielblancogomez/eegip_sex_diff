@@ -399,28 +399,47 @@ p_sex_q3 <- c(
   speech_con   = extract_p(q3_sc, "sexF"),
   gamma_lat    = extract_p(q3_gl, "sexF")
 )
+ 
+p_traj_q1 <- c(
+  front_gamma  = extract_p(q1_fg,    "timepoint_c:sexF"),
+  auditory_con = extract_p(q1_ac,    "timepoint_c:sexF"),
+  speech_con   = extract_p(q1_sc_lm, "timepoint_c:sexF"),
+  gamma_lat    = extract_p(q1_gl_lm, "timepoint_c:sexF")
+)
 
-# -- Now correct BOTH the sex-at-intercept and sex-x-time within each family --
-# Q1 family: 4 intercept tests + 4 trajectory tests = 8 tests
-p_q1_combined      <- c(p_sex_q1, p_q1)
-p_q1_combined_holm <- p.adjust(p_q1_combined, method = "holm")
+# Q1: 8 tests — 4 intercept (sex at 6 mo) + 4 trajectory (sex x time)
+p_q1_full      <- c(p_sex_q1, p_traj_q1)
+p_q1_full_holm <- p.adjust(p_q1_full, method = "holm")
+cat("Q1 full family Holm (intercept + trajectory):\n")
+print(round(p_q1_full_holm, 4))
 
-# Q2 family: 4 intercept tests + 4 trajectory tests = 8 tests
-p_q2_combined      <- c(p_sex_q2, p_q2)
-p_q2_combined_holm <- p.adjust(p_q2_combined, method = "holm")
+p_traj_q2 <- c(
+  front_gamma  = extract_p(q2_fg,    "timepoint_c:sexF"),
+  auditory_con = extract_p(q2_ac,    "timepoint_c:sexF"),
+  speech_con   = extract_p(q2_sc_lm, "timepoint_c:sexF"),
+  gamma_lat    = extract_p(q2_gl_lm, "timepoint_c:sexF")
+)
 
-# Q3 family: 4 intercept tests + 4 trajectory tests = 8 tests
-p_q3_combined      <- c(p_sex_q3, p_q3)
-p_q3_combined_holm <- p.adjust(p_q3_combined, method = "holm")
-p_q3_combined_bh   <- p.adjust(p_q3_combined, method = "BH")
+p_q2_full      <- c(p_sex_q2, p_traj_q2)
+p_q2_full_holm <- p.adjust(p_q2_full, method = "holm")
+cat("Q2 full family Holm (intercept + trajectory):\n")
+print(round(p_q2_full_holm, 4))
 
-# -- Print all corrected p-values --------------------------------------------
-cat("Q1 combined Holm:\n"); print(round(p_q1_combined_holm, 4))
-cat("Q2 combined Holm:\n"); print(round(p_q2_combined_holm, 4))
-cat("Q3 combined Holm:\n"); print(round(p_q3_combined_holm, 4))
-cat("Q3 combined BH:\n");   print(round(p_q3_combined_bh,   4))
+# Q3 [EXPLORATORY]: 8 tests — 4 intercept + 4 trajectory
+p_traj_q3 <- c(
+  front_gamma  = extract_p(q3_fg,    "timepoint_c:sexF"),
+  auditory_con = extract_p(q3_ac,    "timepoint_c:sexF"),
+  speech_con   = extract_p(q3_sc,    "timepoint_c:sexF"),
+  gamma_lat    = extract_p(q3_gl_lm, "timepoint_c:sexF")
+)
 
-
+p_q3_full      <- c(p_sex_q3, p_traj_q3)
+p_q3_full_holm <- p.adjust(p_q3_full, method = "holm")
+p_q3_full_bh   <- p.adjust(p_q3_full, method = "BH")
+cat("Q3 full family Holm (intercept + trajectory, exploratory):\n")
+print(round(p_q3_full_holm, 4))
+cat("Q3 full family BH:\n")
+print(round(p_q3_full_bh, 4))
 
 # **** EMMEANS MODEL ****
 # Corrected pairwise contrasts for speech connectivity sex differences
@@ -476,34 +495,34 @@ model_type_q3 <- c("lmer", "lmer", "lmer", "lm*")
 summary_table <- data.frame(
   EEG_Variable = rep(rep(eeg_labels, each = 1), 6),
   Question = c(
-    rep("Sex at 6 mo",          4),
-    rep("Sex × Time",           4),
-    rep("Sex at 6 mo (TLA ref)",4),
-    rep("Sex × Group × Time",   4),
-    rep("Sex at 6 mo (no-ASD ref)", 4),
-    rep("Sex × Dx × Time",      4)
+    rep("Sex at 6 mo (Q1)",          4),
+    rep("Sex × Time (Q1)",           4),
+    rep("Sex at 6 mo (Q2, TLA ref)", 4),
+    rep("Sex × Time (Q2)",           4),
+    rep("Sex at 6 mo (Q3, no-ASD ref)", 4),
+    rep("Sex × Time (Q3)",           4)
   ),
   Test = c(
-    rep("Intercept", 4), rep("Interaction", 4),
-    rep("Intercept", 4), rep("Interaction", 4),
-    rep("Intercept", 4), rep("Interaction", 4)
+    rep("Intercept",   4), rep("Trajectory", 4),
+    rep("Intercept",   4), rep("Trajectory", 4),
+    rep("Intercept",   4), rep("Trajectory", 4)
   ),
   Model_type = c(model_type_q1, model_type_q1,
                  model_type_q2, model_type_q2,
                  model_type_q3, model_type_q3),
   p_raw = round(c(
-    p_sex_q1, p_q1,
-    p_sex_q2, p_q2,
-    p_sex_q3, p_q3
+    p_q1_full,
+    p_q2_full,
+    p_q3_full
   ), 4),
   p_holm = round(c(
-    p_q1_combined_holm,
-    p_q2_combined_holm,
-    p_q3_combined_holm
+    p_q1_full_holm,
+    p_q2_full_holm,
+    p_q3_full_holm
   ), 4),
   p_BH = c(
     rep(NA, 16),
-    round(p_q3_combined_bh, 4)
+    round(p_q3_full_bh, 4)
   ),
   marginal_R2 = round(c(
     r2_q1, r2_q1,
