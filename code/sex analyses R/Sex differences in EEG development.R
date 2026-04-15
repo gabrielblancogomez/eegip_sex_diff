@@ -1,12 +1,11 @@
-# EEG SEX DIFFERENCES IN INFANT DEVELOPMENT 
-
-# Author Gabriel Blanco-Gomez
-
-# Questions:
-#   Main Q1: Do males and females differ in EEG development across various EEG measures (6->12 months)?
-#   Supplemetary Q3: Does sex interact with ASD likelihood (TLA vs ELA)?
-#   Supplemetary Q3: Does sex interact with ASD diagnosis? (ELA only)
+# EEG SEX DIFFERENCES IN INFANT DEVELOPMENT
 #
+# Author: Gabriel Blanco-Gomez
+#
+# Research Questions:
+#   Q1: Do males and females differ in EEG development across various EEG measures (6 to 12 months)?
+#   Q2: Does sex interact with ASD likelihood (TLA vs ELA)?
+#   Q3 (Exploratory): Does sex interact with ASD diagnosis? (ELA only)
 
 
 # 1. SETUP
@@ -27,10 +26,10 @@ library(sandwich)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-dir.create("figures/main",          recursive = TRUE, showWarnings = FALSE)
-dir.create("figures/supplementary", recursive = TRUE, showWarnings = FALSE)
-dir.create("tables/main",           recursive = TRUE, showWarnings = FALSE)
-dir.create("tables/supplementary",  recursive = TRUE, showWarnings = FALSE)
+dir.create("../../figures/main",          recursive = TRUE, showWarnings = FALSE)
+dir.create("../../figures/supplementary", recursive = TRUE, showWarnings = FALSE)
+dir.create("tables/main",                 recursive = TRUE, showWarnings = FALSE)
+dir.create("tables/supplementary",        recursive = TRUE, showWarnings = FALSE)
 
 
 # 2. DATA PREPARATION
@@ -93,7 +92,7 @@ eeg_long %>%
   )
 
 
-# 3a. Q1 — SEX x TIME: FRONTAL GAMMA POWER
+# 3a. Q1: SEX x TIME: FRONTAL GAMMA POWER
 
 q1_fg <- lmer(
   front_gamma ~ timepoint_c * sex + site + iq + (1 | subject),
@@ -110,7 +109,7 @@ performance::check_model(q1_fg)
 
 
 
-# 3b. Q1 — SEX x TIME: AUDITORY NETWORK CONNECTIVITY
+# 3b. Q1: SEX x TIME: AUDITORY NETWORK CONNECTIVITY
 
 q1_ac <- lmer(
   auditory_con ~ timepoint_c * sex + site + iq + (1 | subject),
@@ -129,11 +128,11 @@ performance::check_model(q1_ac)
 bptest(lm(auditory_con ~ timepoint_c * sex + site, data = eeg_long))
 leveneTest(residuals(q1_ac) ~ eeg_long$sex[!is.na(eeg_long$auditory_con)])
 
-# HC3 robustness check — compare with original
+# HC3 robustness check: compare with original
 q1_ac_lm <- lm(auditory_con ~ timepoint_c * sex + site, data = eeg_long)
 coeftest(q1_ac_lm, vcov = vcovHC(q1_ac_lm, type = "HC3"))
 
-# 3c. Q1 — SEX x TIME: SPEECH NETWORK CONNECTIVITY
+# 3c. Q1: SEX x TIME: SPEECH NETWORK CONNECTIVITY
 
 q1_sc <- lmer(
   speech_con ~ timepoint_c * sex + site + iq + (1 | subject),
@@ -161,7 +160,7 @@ performance::check_model(q1_sc_lm)
 
 #Preliminary results = sig difference in speech connectivity
 
-# 3d. Q1 — SEX x TIME: POWER LATERALIZATION
+# 3d. Q1: SEX x TIME: POWER LATERALIZATION
 
 q1_gl <- lmer(
   gamma_lat ~ timepoint_c * sex + site + iq +(1 | subject),
@@ -189,7 +188,7 @@ performance::compare_performance(q1_fg, q1_ac, q1_sc, q1_gl)
 
 
 
-# 4a. Q2 — SEX x LIKELIHOOD x TIME: FRONTAL GAMMA POWER
+# 4a. Q2: SEX x LIKELIHOOD x TIME: FRONTAL GAMMA POWER
 
 q2_fg <- lmer(
   front_gamma ~ timepoint_c * sex * group_type + site + iq +
@@ -204,7 +203,7 @@ performance::r2(q2_fg)
 performance::check_model(q2_fg)
 
 
-# 4b. Q2 — SEX x LIKELIHOOD x TIME: AUDITORY NETWORK CONNECTIVITY
+# 4b. Q2: SEX x LIKELIHOOD x TIME: AUDITORY NETWORK CONNECTIVITY
 
 q2_ac <- lmer(
   auditory_con ~ timepoint_c * sex * group_type + site +iq +
@@ -219,7 +218,7 @@ performance::r2(q2_ac)
 performance::check_model(q2_ac)
 
 
-# 4c. Q2 — SEX x LIKELIHOOD x TIME: SPEECH NETWORK CONNECTIVITY
+# 4c. Q2: SEX x LIKELIHOOD x TIME: SPEECH NETWORK CONNECTIVITY
 
 q2_sc <- lmer(
   speech_con ~ timepoint_c * sex * group_type + site +iq +
@@ -243,7 +242,7 @@ summary(q2_sc_lm)
 performance::r2(q2_sc_lm)
 performance::check_model(q2_sc_lm)
 emmeans(q2_sc_lm, pairwise ~ sex | group_type)
-# 4d. Q2 — SEX x LIKELIHOOD x TIME: POWER LATERALIZATION
+# 4d. Q2: SEX x LIKELIHOOD x TIME: POWER LATERALIZATION
 
 q2_gl <- lmer(
   gamma_lat ~ timepoint_c * sex * group_type + site +iq +
@@ -269,11 +268,11 @@ performance::r2(q2_gl_lm)
 performance::check_model(q2_gl_lm)
 
 
-# -- Q2 compare all four models -----------------------------------------------
+# Q2: compare all four models
 performance::compare_performance(q2_fg, q2_ac, q2_sc, q2_gl)
 
 
-# 5. Q3 PREP — ELA SUBSAMPLE + ASD OUTCOME CODING  [EXPLORATORY]
+# 5. Q3 PREP: ELA SUBSAMPLE + ASD OUTCOME CODING [EXPLORATORY]
 
 eeg_ela <- eeg_long %>%
   filter(group_type == "ELA") %>%
@@ -289,13 +288,13 @@ eeg_ela <- eeg_long %>%
   ) %>%
   filter(!is.na(outcome_bin))
 
-# N per cell — check before modelling
+# N per cell: check before modelling
 eeg_ela %>%
   distinct(subject, sex, outcome_bin) %>%
   count(sex, outcome_bin)
 
 
-# 5a. Q3 [EXPLORATORY] — SEX x DIAGNOSIS x TIME: FRONTAL GAMMA POWER
+# 5a. Q3 [EXPLORATORY]: SEX x DIAGNOSIS x TIME: FRONTAL GAMMA POWER
 
 q3_fg <- lmer(
   front_gamma ~ timepoint_c * sex * outcome_bin + site +iq +
@@ -310,7 +309,7 @@ performance::r2(q3_fg)
 performance::check_model(q3_fg)
 
 
-# 5b. Q3 [EXPLORATORY] — SEX x DIAGNOSIS x TIME: AUDITORY NETWORK
+# 5b. Q3 [EXPLORATORY]: SEX x DIAGNOSIS x TIME: AUDITORY NETWORK
 
 
 q3_ac <- lmer(
@@ -327,7 +326,7 @@ performance::check_model(q3_ac)
 
 
  
-# 5c. Q3 [EXPLORATORY] — SEX x DIAGNOSIS x TIME: SPEECH NETWORK
+# 5c. Q3 [EXPLORATORY]: SEX x DIAGNOSIS x TIME: SPEECH NETWORK
  
 q3_sc <- lmer(
   speech_con ~ timepoint_c * sex * outcome_bin + site +iq +
@@ -341,7 +340,7 @@ summary(q3_sc)
 performance::r2(q3_sc)
 performance::check_model(q3_sc)
 
-# 5d. Q3 [EXPLORATORY] — SEX x DIAGNOSIS x TIME: POWER LATERALIZATION
+# 5d. Q3 [EXPLORATORY]: SEX x DIAGNOSIS x TIME: POWER LATERALIZATION
 
 q3_gl <- lmer(
   gamma_lat ~ timepoint_c * sex * outcome_bin + site +iq +
@@ -364,7 +363,7 @@ summary(q3_gl_lm)
 performance::r2(q3_gl_lm)
 performance::check_model(q3_gl_lm)
 
-#  Q3 compare all four models 
+# Q3: compare all four models
 performance::compare_performance(q3_fg, q3_ac, q3_sc, q3_gl)
 
 
@@ -376,7 +375,7 @@ extract_p <- function(model, term) {
   row$`Pr(>|t|)`[1]
 }
 
-#  Extract p for sexF (sex difference at 6 months = intercept)
+# Extract p for sexF (sex difference at 6 months = intercept)
 p_sex_q1 <- c(
   front_gamma  = extract_p(q1_fg, "sexF"),
   auditory_con = extract_p(q1_ac, "sexF"),
@@ -405,7 +404,7 @@ p_traj_q1 <- c(
   gamma_lat    = extract_p(q1_gl_lm, "timepoint_c:sexF")
 )
 
-# Q1: 8 tests — 4 intercept (sex at 6 mo) + 4 trajectory (sex x time)
+# Q1: 8 tests, 4 intercept (sex at 6 mo) + 4 trajectory (sex x time)
 p_q1_full      <- c(p_sex_q1, p_traj_q1)
 p_q1_full_holm <- p.adjust(p_q1_full, method = "holm")
 cat("Q1 full family Holm (intercept + trajectory):\n")
@@ -423,7 +422,7 @@ p_q2_full_holm <- p.adjust(p_q2_full, method = "holm")
 cat("Q2 full family Holm (intercept + trajectory):\n")
 print(round(p_q2_full_holm, 4))
 
-# Q3 [EXPLORATORY]: 8 tests — 4 intercept + 4 trajectory
+# Q3 [EXPLORATORY]: 8 tests, 4 intercept + 4 trajectory
 p_traj_q3 <- c(
   front_gamma  = extract_p(q3_fg,    "timepoint_c:sexF"),
   auditory_con = extract_p(q3_ac,    "timepoint_c:sexF"),
@@ -439,7 +438,7 @@ print(round(p_q3_full_holm, 4))
 cat("Q3 full family BH:\n")
 print(round(p_q3_full_bh, 4))
 
-# **** EMMEANS MODEL ****
+# EMMEANS MODEL
 # Corrected pairwise contrasts for speech connectivity sex differences
 
 # 1. Speech connectivity
@@ -458,8 +457,8 @@ pairs(emm_q3_fg, simple = "sex", adjust = "holm")
 
 
 
-#  Marginal R2 for each model 
-#  Marginal R2: use lm $r.squared for singular-replaced models -
+# Marginal R2 for each model
+# Marginal R2: use lm $r.squared for singular-replaced models
 r2_q1 <- c(
   performance::r2(q1_fg)$R2_marginal,
   performance::r2(q1_ac)$R2_marginal,
@@ -481,7 +480,7 @@ r2_q3 <- c(
   summary(q3_gl_lm)$r.squared         # was singular lmer
 )
 
-#  Assemble summary table 
+# Assemble summary table
 
 eeg_labels <- c("Frontal Gamma Power", "Auditory Network",
                 "Speech Network",      "Power Lateralization")
@@ -539,7 +538,7 @@ summary_table$sig_holm <- case_when(
 )
 
 print(summary_table)
-#- Save as Word via flextable 
+# Save as Word via flextable
 
 ft_summary <- flextable(summary_table) %>%
   set_header_labels(

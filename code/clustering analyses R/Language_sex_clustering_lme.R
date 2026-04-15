@@ -1,11 +1,12 @@
 # LANGUAGE GROWTH: HC CLASS × SEX INTERACTIONS
 #
-# Questions:
-#   Q1: Does HC class interact with sex to predict expressive language growth?
-#   Q2: Same as Q1 for receptive language.
-#   Q3: Exploratory Does HC class × sex × ASD likelihood interact to predict expressive language growth?
-#   Q4: Same as Q3 for receptive language.
+# Author: Gabriel Blanco-Gomez
 #
+# Research Questions:
+#   Q1: Does expressive language growth differ by sex and HC neurosubtype?
+#   Q2: Is the sex by class pattern in language moderated by ASD likelihood? (Exploratory)
+#   Q3: Does receptive language growth differ by sex and HC neurosubtype?
+#   Q4: Is the sex by class pattern in receptive language moderated by ASD likelihood? (Exploratory)
 
 
 # 1. SETUP
@@ -21,10 +22,10 @@ library(officer)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-dir.create("figures/main",          recursive = TRUE, showWarnings = FALSE)
-dir.create("figures/supplementary", recursive = TRUE, showWarnings = FALSE)
-dir.create("tables/main",           recursive = TRUE, showWarnings = FALSE)
-dir.create("tables/supplementary",  recursive = TRUE, showWarnings = FALSE)
+dir.create("../../figures/main",          recursive = TRUE, showWarnings = FALSE)
+dir.create("../../figures/supplementary", recursive = TRUE, showWarnings = FALSE)
+dir.create("tables/main",                 recursive = TRUE, showWarnings = FALSE)
+dir.create("tables/supplementary",        recursive = TRUE, showWarnings = FALSE)
 
 
 
@@ -54,7 +55,7 @@ raw <- raw %>%
 raw <- raw %>% filter(!is.na(hc_class))
 
 
-# 3. DEMOGRAPHICS — SEX × HC CLASS DISTRIBUTION
+# 3. DEMOGRAPHICS: SEX × HC CLASS DISTRIBUTION
 
 
 cat("\n-- N per HC class × sex ------------------------------------------\n")
@@ -82,7 +83,7 @@ print(chisq.test(sex_class_table))
 
 # Check average expressive language scores for each subgroup at timepoint 36
 raw %>%
-  group_by(hc_class) %>%
+  group_by(hc_class,sex) %>%
   summarise(mean_expressive_36 = mean(expressive_36, na.rm = TRUE),
             sd_expressive_36 = sd(expressive_36, na.rm = TRUE),
             n = sum(!is.na(expressive_36)))
@@ -95,7 +96,7 @@ raw %>%
             n = sum(!is.na(receptive_36)))
 
 
-# 4. LONG FORMAT — EXPRESSIVE LANGUAGE
+# 4. LONG FORMAT: EXPRESSIVE LANGUAGE
 
 exp_long <- raw %>%
   select(subject, sex, site, group_type, hc_class, outcome,
@@ -119,7 +120,7 @@ exp_long %>%
 
 
 
-# 5. LONG FORMAT — RECEPTIVE LANGUAGE
+# 5. LONG FORMAT: RECEPTIVE LANGUAGE
 
 
 rec_long <- raw %>%
@@ -143,7 +144,7 @@ rec_long %>%
   print()
 
 
-# 6a. Q1 — EXPRESSIVE: HC class × Sex × Time
+# 6a. Q1: EXPRESSIVE: HC class × Sex × Time
 
 # (Do different HC classes show different sex gaps in language development?)
 
@@ -161,11 +162,8 @@ performance::check_model(q1_exp)
 
  
 
-# So far, it looks like there a strong sex difference but weak evidence for a 
-# sex x class difference. Pairs emmeans test suggest sex differences in languae at
-# 36 months within HC class B but not at earlier timepoints
-
-# 6b. Q2 — EXPRESSIVE: HC class × Sex × ASD Likelihood × Time
+ 
+# 6b. Q2: EXPRESSIVE: HC class × Sex × ASD Likelihood × Time
 # Key term: timepoint_c : sex : hc_class : group_type
 # (Is the sex × class pattern in language moderated by ASD likelihood?)
 
@@ -189,11 +187,11 @@ emm_q2 <- emmeans(q2_exp, ~ sex * hc_class * group_type | timepoint_c,
 pairs(emm_q2, simple = "sex")
 
 
-# -- Compare Q1 and Q2 expressive models --------------------------------------
+# Compare Q1 and Q2 expressive models
 performance::compare_performance(q1_exp, q2_exp)
 
 
-# 7a. Q3 — RECEPTIVE: HC class × Sex × Time
+# 7a. Q3: RECEPTIVE: HC class × Sex × Time
 
 q3_rec <- lmer(
   receptive ~ timepoint_c * sex * hc_class + site + (1 | subject),
@@ -209,7 +207,7 @@ performance::check_model(q3_rec)
  
 
 
-# 7b. Q4 — RECEPTIVE: HC class × Sex × ASD Likelihood × Time
+# 7b. Q4: RECEPTIVE: HC class × Sex × ASD Likelihood × Time
 
 
 q4_rec <- lmer(
@@ -225,14 +223,14 @@ performance::r2(q4_rec)
 performance::check_model(q4_rec)
 
 
-# -- Compare Q3 and Q4 receptive models ---------------------------------------
+# Compare Q3 and Q4 receptive models
 performance::compare_performance(q3_rec, q4_rec)
 
 
 # 8. MULTIPLE TESTING CORRECTIONS & SUMMARY TABLE
 
 
-# -- Helper: extract p from anova() row matching a term ----------------------
+# Helper: extract p from anova() row matching a term
 extract_anova_p <- function(model, term_pattern) {
   aov_tbl      <- as.data.frame(anova(model))
   aov_tbl$term <- rownames(aov_tbl)
@@ -285,7 +283,7 @@ r2_q4 <- safe_r2_marginal(q4_rec)   # kept for reference
 
 
 # Pairwise comparisons
-# Four-way models are retained for reference onl because: 
+# Four-way models are retained for reference only because :
 #   (1) severe multicollinearity (VIF > 300 for key interaction terms), and
 #   (2) insufficient cell sizes in some hc_class × sex × group_type cells
 #       (minimum n = 4; see demographics table above).
@@ -349,3 +347,90 @@ ft_summary <- flextable(summary_table) %>%
 ft_summary
 save_as_docx(ft_summary, path = "tables/main/Language_HCclass_sex_corrected_results.docx")
 
+# 9. SUPPLEMENTARY FIGURES: LANGUAGE TRAJECTORIES BY SEX AND GROUP
+
+# Subset only ELA participants
+ela_exp_long <- exp_long %>% filter(group_type == "ELA")
+
+q1_ela_exp <- lmer(
+  expressive ~ timepoint_c * sex *group_type  + site + (1 | subject),
+  data    = exp_long,
+  REML    = FALSE,
+  control = lmerControl(optimizer = "bobyqa")
+)
+
+summary(q1_ela_exp)
+
+
+# Plot language trajectories by group_type 
+emm_ela <- emmeans(q1_ela_exp, ~ timepoint_c * sex * group_type, at = list(timepoint_c = c(0, 30)))
+emm_ela_df <- as.data.frame(emm_ela)
+ggplot(emm_ela_df, aes(x = timepoint_c + 6, y = emmean, color = sex, group = sex)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ group_type) +
+  labs(x = "Age (months)", y = "Estimated Marginal Mean Expressive Language") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("blue", "red")) +
+  ggtitle("Expressive Language Trajectories by Sex and ASD Likelihood") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(
+  "../../figures/supplementary/S_expressive_language_sex_likelihood.png",
+  width = 8, height = 6, dpi = 300
+)
+
+q1_ela_exp_asd <- lmer(
+  expressive ~ timepoint_c * sex *outcome  + site + (1 | subject),
+  data    = ela_exp_long,
+  REML    = FALSE,
+  control = lmerControl(optimizer = "bobyqa")
+)
+
+summary(q1_ela_exp_asd)
+# Plot language trajectories by asd diagnosis within ELA
+emm_ela_asd <- emmeans(q1_ela_exp_asd, ~ timepoint_c * sex * outcome, at = list(timepoint_c = c(0, 30)))
+emm_ela_asd_df <- as.data.frame(emm_ela_asd)
+ggplot(emm_ela_asd_df, aes(x = timepoint_c + 6, y = emmean, color = sex, group = sex)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ outcome) +
+  labs(x = "Age (months)", y = "Estimated Marginal Mean Expressive Language") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("blue", "red")) +
+  ggtitle("Expressive Language Trajectories by Sex and ASD Diagnosis (ELA Only)") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(
+  "../../figures/supplementary/S_expressive_language_sex_diagnosis_ELA.png",
+  width = 8, height = 6, dpi = 300
+)
+
+# Plot trajectories between TLA and ELA wihout asd
+exp_long_no_asd <- exp_long %>% filter(outcome == "no-asd")
+q1_no_asd_exp <- lmer(
+  expressive ~ timepoint_c * sex * group_type  + site + (1 | subject),
+  data    = exp_long_no_asd,
+  REML    = FALSE,
+  control = lmerControl(optimizer = "bobyqa")
+)
+summary(q1_no_asd_exp)
+emm_no_asd <- emmeans(q1_no_asd_exp, ~ timepoint_c * sex * group_type, at = list(timepoint_c = c(0, 30)))
+emm_no_asd_df <- as.data.frame(emm_no_asd)
+ggplot(emm_no_asd_df, aes(x = timepoint_c + 6, y = emmean, color = sex, group = sex)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ group_type) +
+  labs(x = "Age (months)", y = "Estimated Marginal Mean Expressive Language") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("blue", "red")) +
+  ggtitle("Expressive Language Trajectories by Sex and ASD Likelihood (No ASD Only)") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(
+  "../../figures/supplementary/S_expressive_language_sex_likelihood_noASD.png",
+  width = 8, height = 6, dpi = 300
+)
