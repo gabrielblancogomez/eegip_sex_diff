@@ -34,7 +34,7 @@ The scripts should be run in the following order:
 **File:** `code/eeg/EEG_feature_extraction.ipynb
 
 **What it does:**
-This script extractsvarious EEG metrics across the first year of life (6 to 12 months) including:
+This script extracts various EEG metrics across the first year of life (6 to 12 months) including:
 
 - Frontal gamma power
 - Auditory network connectivity
