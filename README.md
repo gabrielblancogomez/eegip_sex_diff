@@ -61,17 +61,6 @@ This script models whether sex differences in language development (expressive a
 - Q3: Receptive language growth by sex and HC class (primary)
 - Q4: Receptive language growth by sex, HC class, and ASD likelihood (exploratory, four-way model)
 
-**Key outputs:**
-- Demographics: sex composition by HC class, chi-square tests
-- Model summaries and Holm-corrected p-values for primary tests
-- Post-hoc pairwise sex contrasts at 6 and 36 months within each cluster
-- Summary table saved as: `tables/main/Language_HCclass_sex_corrected_results.docx`
-- Supplementary figures saved to `figures/supplementary/`:
-  - `S_expressive_language_sex_likelihood.png`: Expressive language trajectories by sex and ASD likelihood
-  - `S_expressive_language_sex_diagnosis_ELA.png`: Expressive language by sex and ASD diagnosis (ELA only)
-  - `S_expressive_language_sex_likelihood_noASD.png`: Expressive language by sex and likelihood, no-ASD participants only
- 
-
 ### Step 3: Publication Figures
 
 **File:** `code/figures/Publication Figures.ipynb`
@@ -80,9 +69,9 @@ This script models whether sex differences in language development (expressive a
 This Python (Jupyter) notebook generates all main and supplementary publication-quality figures from the pre-processed dataset. 
  
 
-## Dependencies
+### Dependencies
 
-### R
+#### R
 
 Tested on R 4.3+.
 
@@ -94,7 +83,7 @@ install.packages(c(
 ))
 ```
 
-### Python
+#### Python
 
 Tested on Python 3.10+.
 
