@@ -60,7 +60,7 @@ This script models whether male and female infants differ in four EEG metrics ac
 **File:** `code/clustering analyses R/Language_sex_clustering_lme.R`
 
 **What it does:**
-This script models whether sex differences in language development (expressive and receptive) from 6 to 36 months interact with HC neurosubtype class. Neurosubtype classes (HC Class 0, 1, 2) were derived using hierarchical clustering applied to five EEG features at 6 months (see Blanco-Gomez et al. 2025b for derivation details). 
+This script models whether sex differences in language development (expressive and receptive) from 6 to 36 months interact with HC neurosubtype class. Neurosubtype classes (HC Class 0, 1, 2) were derived using hierarchical clustering applied to five EEG features at 6 months (see  Blanco-Gomez, G., Wright, N., O'Reilly, C. et al. (2025). EEG neurosubtyping of infants predicts language trajectories. Journal of Neural Transmission. https://doi.org/10.1007/s00702-025-03063-2 derivation details). 
 
 **Four analysis questions are addressed:**
 
