@@ -2,7 +2,7 @@
 
 Code repository for:
 
-Blanco-Gomez, G. et al. (2025). *Sex differences in early infant brain developmen*
+Blanco-Gomez, G. et al. (2025). *Sex differences in early infant brain development*
 
 ## Overview
 
