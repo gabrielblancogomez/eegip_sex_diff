@@ -15,9 +15,10 @@ This repository contains the analysis code and plotting scripts used to examine 
 infant_sex_diff/
     datasets/               Input data files (not shared publicly)
     code/
-        sex analyses R/     EEG sex difference models (run this first)
-        clustering analyses R/  Language growth and cluster models (run second)
-        figures/            Publication Figures notebook (run last)
+        eeg/                EEG extraction tools
+        sex analyses R/     EEG sex difference models 
+        clustering analyses R/  Language growth and cluster models 
+        figures/            Publication Figures notebook 
     figures/
         main/               Main publication figures (output)
         supplementary/      Supplementary figures (output)
@@ -28,17 +29,24 @@ infant_sex_diff/
 
 The scripts should be run in the following order:
 
-### Step 1: EEG Sex Differences Analysis
+### Step 1: EEG Variable extraction
 
-**File:** `code/sex analyses R/Sex differences in EEG development.R`
+**File:** `code/eeg/EEG_feature_extraction.ipynb
 
 **What it does:**
-This script models whether male and female infants differ in four EEG metrics across the first year of life (6 to 12 months), and whether sex interacts with ASD likelihood or diagnosis. The four EEG metrics are:
+This script extractsvarious EEG metrics across the first year of life (6 to 12 months) including:
 
 - Frontal gamma power
 - Auditory network connectivity
 - Speech network connectivity
 - Power lateralization (gamma)
+
+### Step 2: EEG Sex Differences Analysis
+
+**File:** `code/sex analyses R/Sex differences in EEG development.R`
+
+**What it does:**
+This script models whether male and female infants differ in four EEG metrics across the first year of life (6 to 12 months), and whether sex interacts with ASD likelihood or diagnosis
 
 **Three analysis questions are addressed:**
 
@@ -47,7 +55,7 @@ This script models whether male and female infants differ in four EEG metrics ac
 - Q3 (Exploratory): Sex by ASD diagnosis interaction (ELA subsample only)
 
 
-### Step 2: Language Growth and Neurosubtype Analysis
+### Step 3: Language Growth and Neurosubtype Analysis
 
 **File:** `code/clustering analyses R/Language_sex_clustering_lme.R`
 
@@ -61,7 +69,7 @@ This script models whether sex differences in language development (expressive a
 - Q3: Receptive language growth by sex and HC class (primary)
 - Q4: Receptive language growth by sex, HC class, and ASD likelihood (exploratory, four-way model)
 
-### Step 3: Publication Figures
+### Step 4: Publication Figures
 
 **File:** `code/figures/Publication Figures.ipynb`
 
