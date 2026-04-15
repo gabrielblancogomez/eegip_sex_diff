@@ -58,19 +58,19 @@ raw <- raw %>% filter(!is.na(hc_class))
 # 3. DEMOGRAPHICS: SEX × HC CLASS DISTRIBUTION
 
 
-cat("\n-- N per HC class × sex ------------------------------------------\n")
+cat("\nN per HC class × sex:\n")
 raw %>%
   count(hc_class, sex) %>%
   pivot_wider(names_from = sex, values_from = n, values_fill = 0) %>%
   print()
 
-cat("\n-- N per HC class × ASD likelihood ----------------------------------\n")
+cat("\nN per HC class × ASD likelihood:\n")
 raw %>%
   count(hc_class, group_type) %>%
   pivot_wider(names_from = group_type, values_from = n, values_fill = 0) %>%
   print()
 
-cat("\n-- N per HC class × sex × ASD likelihood ----------------------------\n")
+cat("\nN per HC class × sex × ASD likelihood:\n")
 raw %>%
   count(hc_class, sex, group_type) %>%
   pivot_wider(names_from = c(sex, group_type), values_from = n, values_fill = 0) %>%
@@ -78,7 +78,7 @@ raw %>%
 
 # Chi-square: sex composition across HC classes
 sex_class_table <- table(raw$hc_class, raw$sex)
-cat("\n-- Chi-square: sex ~ HC class ----------------------------------------\n")
+cat("\nChi-square: sex ~ HC class\n")
 print(chisq.test(sex_class_table))
 
 # Check average expressive language scores for each subgroup at timepoint 36
@@ -112,7 +112,7 @@ exp_long <- raw %>%
     timepoint_c = timepoint - 6          # 0 = 6 mo, 6 = 12 mo, 12 = 18 mo, 18 = 24 mo, 30 = 36 mo
   )
 
-cat("\n-- Expressive language: observations per timepoint -------------------\n")
+cat("\nExpressive language: observations per timepoint\n")
 exp_long %>%
   group_by(timepoint) %>%
   summarise(n = sum(!is.na(expressive))) %>%
@@ -137,7 +137,7 @@ rec_long <- raw %>%
     timepoint_c = timepoint - 6
   )
 
-cat("\n-- Receptive language: observations per timepoint --------------------\n")
+cat("\nReceptive language: observations per timepoint\n")
 rec_long %>%
   group_by(timepoint) %>%
   summarise(n = sum(!is.na(receptive))) %>%
@@ -260,14 +260,14 @@ p_fam_exploratory <- c(
 )
 p_fam_exploratory_holm <- p.adjust(p_fam_exploratory, method = "holm")
 
-cat("\n-- PRIMARY Holm-corrected p-values (Q1 + Q3) ----------------------------\n")
+cat("\nPRIMARY Holm-corrected p-values (Q1 + Q3):\n")
 print(round(p_fam_primary_holm, 4))
 
-cat("\n-- EXPLORATORY four-way p-values (Q2 + Q4, interpret with caution) ------\n")
+cat("\nEXPLORATORY four-way p-values (Q2 + Q4, interpret with caution):\n")
 cat("NOTE: VIF > 300 for key terms; minimum cell n = 4. For reference only.\n")
 print(round(p_fam_exploratory_holm, 4))
 
-cat("\n-- Raw p-values (primary family) ----------------------------------------\n")
+cat("\nRaw p-values (primary family):\n")
 print(round(p_fam_primary, 4))
 # Marginal R2 for each model
 safe_r2_marginal <- function(model) {
@@ -292,12 +292,12 @@ r2_q4 <- safe_r2_marginal(q4_rec)   # kept for reference
 # Post-hoc pairwise comparisons for primary three-way models.
 emm_exp_pairwise <- emmeans(q1_exp, ~ sex * hc_class | timepoint_c,
                             at = list(timepoint_c = c(0, 30)))
-cat("\n-- Expressive language: sex contrasts by cluster at 6 and 36 months ----\n")
+cat("\nExpressive language: sex contrasts by cluster at 6 and 36 months\n")
 pairs(emm_exp_pairwise, simple = "sex", adjust = "holm")
 
 emm_rec_pairwise <- emmeans(q3_rec, ~ sex * hc_class | timepoint_c,
                             at = list(timepoint_c = c(0, 30)))
-cat("\n-- Receptive language: sex contrasts by cluster at 6 and 36 months -----\n")
+cat("\nReceptive language: sex contrasts by cluster at 6 and 36 months\n")
 pairs(emm_rec_pairwise, simple = "sex", adjust = "holm")
 
 # Summary table
