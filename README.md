@@ -2,7 +2,7 @@
 
 Code repository for:
 
-Blanco-Gomez, G. et al. (2025). *Sex differences in early infant brain developmen*
+Blanco-Gomez, G. et al. (2025). *Sex differences in early infant brain development*
 
 ## Overview
 
@@ -34,7 +34,7 @@ The scripts should be run in the following order:
 **File:** `code/eeg/EEG_feature_extraction.ipynb
 
 **What it does:**
-This script extractsvarious EEG metrics across the first year of life (6 to 12 months) including:
+This script extracts various EEG metrics across the first year of life (6 to 12 months) including:
 
 - Frontal gamma power
 - Auditory network connectivity
@@ -60,7 +60,7 @@ This script models whether male and female infants differ in four EEG metrics ac
 **File:** `code/clustering analyses R/Language_sex_clustering_lme.R`
 
 **What it does:**
-This script models whether sex differences in language development (expressive and receptive) from 6 to 36 months interact with HC neurosubtype class. Neurosubtype classes (HC Class 0, 1, 2) were derived using hierarchical clustering applied to five EEG features at 6 months (see Blanco-Gomez et al. 2025b for derivation details). 
+This script models whether sex differences in language development (expressive and receptive) from 6 to 36 months interact with HC neurosubtype class. Neurosubtype classes (HC Class 0, 1, 2) were derived using hierarchical clustering applied to five EEG features at 6 months (see  Blanco-Gomez, G., Wright, N., O'Reilly, C. et al. (2025). EEG neurosubtyping of infants predicts language trajectories. Journal of Neural Transmission. https://doi.org/10.1007/s00702-025-03063-2 derivation details). 
 
 **Four analysis questions are addressed:**
 
