@@ -64,10 +64,11 @@ This script models whether sex differences in language development (expressive a
 
 **Four analysis questions are addressed:**
 
-- Q1: Expressive language growth by sex and HC class (primary)
-- Q2: Expressive language growth by sex, HC class, and ASD likelihood (exploratory, four-way model)
-- Q3: Receptive language growth by sex and HC class (primary)
-- Q4: Receptive language growth by sex, HC class, and ASD likelihood (exploratory, four-way model)
+Q1: Do EEG measures primarily associated with ASD including frontal gamma power, functional connectivity across networks (i.e., auditory network, speech network and language network), gamma lateralisation, peak alpha frequency and theta phase consistency differ by sex? 
+Q1.2: Are these differences modulated by ASD sex likelihood or ASD diagnosis? (Exploratory)
+Q2: Where differences in EEG measures are identified (speech connectivity), does biological sex moderate the relationship between continuous EEG measures and language development from 6 to 36 months? 
+Q3: Given that individual EEG metrics may not capture the full complexity of early brain organization, can a re-analysis of previous multivariate clustering results shed light on how a combination of EEG brain metrics relates to sex-differentiated language trajectories?
+
 
 ### Step 4: Publication Figures
 
