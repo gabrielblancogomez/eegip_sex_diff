@@ -43,16 +43,16 @@ This script extracts various EEG metrics across the first year of life (6 to 12 
 
 ### Step 2: EEG Sex Differences Analysis
 
-**File:** `code/sex analyses R/Sex differences in EEG development.R`
+**File:** `code/sex analyses R/Sex differences in EEG development and Language .R`
 
 **What it does:**
 This script models whether male and female infants differ in four EEG metrics across the first year of life (6 to 12 months), and whether sex interacts with ASD likelihood or diagnosis
 
 **Three analysis questions are addressed:**
 
-- Q1: Sex differences in EEG trajectories across the full sample (6 to 12 months)
-- Q2: Sex by ASD likelihood interaction (TLA vs ELA, full sample)
-- Q3 (Exploratory): Sex by ASD diagnosis interaction (ELA subsample only)
+- Q1: Do EEG measures primarily associated with ASD including frontal gamma power, functional connectivity across networks (i.e., auditory network, speech network and language network), gamma lateralisation, peak alpha frequency and theta phase consistency differ by sex? 
+- Q1.2: Are these differences modulated by ASD sex likelihood or ASD diagnosis? (Exploratory)
+- Q2: Where differences in EEG measures are identified (speech connectivity), does biological sex moderate the relationship between continuous EEG measures and language development from 6 to 36 months? 
 
 
 ### Step 3: Language Growth and Neurosubtype Analysis
@@ -62,12 +62,7 @@ This script models whether male and female infants differ in four EEG metrics ac
 **What it does:**
 This script models whether sex differences in language development (expressive and receptive) from 6 to 36 months interact with HC neurosubtype class. Neurosubtype classes (HC Class 0, 1, 2) were derived using hierarchical clustering applied to five EEG features at 6 months (see  Blanco-Gomez, G., Wright, N., O'Reilly, C. et al. (2025). EEG neurosubtyping of infants predicts language trajectories. Journal of Neural Transmission. https://doi.org/10.1007/s00702-025-03063-2 derivation details). 
 
-**Four analysis questions are addressed:**
-
-Q1: Do EEG measures primarily associated with ASD including frontal gamma power, functional connectivity across networks (i.e., auditory network, speech network and language network), gamma lateralisation, peak alpha frequency and theta phase consistency differ by sex? 
-Q1.2: Are these differences modulated by ASD sex likelihood or ASD diagnosis? (Exploratory)
-Q2: Where differences in EEG measures are identified (speech connectivity), does biological sex moderate the relationship between continuous EEG measures and language development from 6 to 36 months? 
-Q3: Given that individual EEG metrics may not capture the full complexity of early brain organization, can a re-analysis of previous multivariate clustering results shed light on how a combination of EEG brain metrics relates to sex-differentiated language trajectories?
+- Q3: Given that individual EEG metrics may not capture the full complexity of early brain organization, can a re-analysis of previous multivariate clustering results shed light on how a combination of EEG brain metrics relates to sex-differentiated language trajectories?
 
 
 ### Step 4: Publication Figures
@@ -76,8 +71,7 @@ Q3: Given that individual EEG metrics may not capture the full complexity of ear
 
 **What it does:**
 This Python (Jupyter) notebook generates all main and supplementary publication-quality figures from the pre-processed dataset. 
- 
-
+ Figure 2 was generated in R 
 ### Dependencies
 
 #### R
